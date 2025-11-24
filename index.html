@@ -1,264 +1,265 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr"> <head>
+<html lang="ar" dir="rtl">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CIK COIN | The Golden Egg</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرر بملء الشاشة</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: '#FFC800',
-                        'gold-light': '#FFE580',
-                        deep: '#0f0518',
-                        glass: 'rgba(255, 255, 255, 0.05)'
-                    },
-                    fontFamily: {
-                        title: ['Titan One', 'cursive'],
-                        body: ['Outfit', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-fast': 'pulse 1.5s infinite',
-                        'marquee': 'marquee 20s linear infinite',
-                    },
-                    keyframes: {
-                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } },
-                        marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-100%)' } }
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
-        body { background-color: #0f0518; overflow-x: hidden; color: white; }
+        /* (CSS code is mostly unchanged, focusing on adding the new control panel styles) */
+        body { 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+        }
+        #editor-controls-wrapper {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            box-sizing: border-box;
+            padding: 10px;
+        }
         
-        #feather-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
+        /* لوحة تغيير النص الجديدة */
+        .surah-name-control {
+            padding: 10px 0;
+            border-bottom: 1px solid #3c3c3c;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .surah-name-control label {
+            color: #ff9d00; /* لون مميز للحقل الجديد */
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .surah-name-control input[type="text"] {
+            flex-grow: 1;
+            padding: 5px;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+        }
+        .surah-name-control button {
+            background-color: #ff9d00;
+            padding: 6px 15px;
+            font-size: 0.9em;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 200, 0, 0.2);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        /* مربع الإدخال الرئيسي */
+        #code-input-box {
+            flex-grow: 1; 
+            min-height: 200px;
+            padding: 15px;
+            background-color: #252526;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border: none;
+            box-sizing: border-box;
+            outline: none;
         }
-
-        .buy-btn {
-            background: linear-gradient(45deg, #FFC800, #FF9900);
-            box-shadow: 0 0 20px rgba(255, 200, 0, 0.4);
-            transition: all 0.2s;
-        }
-        .buy-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 200, 0, 0.6); }
-
-        .marquee-container { overflow: hidden; white-space: nowrap; background: #FFC800; color: black; padding: 10px 0; font-weight: 900; font-family: 'Titan One', cursive; border-top: 4px solid #fff; border-bottom: 4px solid #fff; }
         
-        /* زر تغيير الصورة */
-        .upload-btn {
-            background: rgba(0,0,0,0.6);
-            border: 1px dashed #FFC800;
-            color: #FFC800;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
+        /* لوحة تحميل الصور */
+        .image-upload-panel {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3c3c3c;
+        }
+        .image-upload-panel h4 {
+            margin: 5px 0;
+            color: #c586c0;
+        }
+        #base64-output {
+            width: 100%;
+            min-height: 40px;
+            margin-top: 5px;
+            font-size: 10px;
+            background-color: #333;
+            color: #ccc;
+            border: none;
+        }
+
+        /* الزر العائم الاحترافي الجديد (FAB) */
+        #floating-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px; 
+            z-index: 1001;
+            padding: 15px 25px;
+            background-color: #28a745; 
+            color: white;
+            border: none;
             cursor: pointer;
-            margin-top: 10px;
-            display: inline-block;
+            border-radius: 50px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background-color 0.2s;
+        }
+        #floating-fab:hover {
+            background-color: #1e7e34;
+        }
+
+        /* حاوية المعاينة بملء الشاشة */
+        #full-preview-container {
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: white;
+            z-index: 1000;
+            display: none; 
+            flex-direction: column;
+        }
+        #live-preview-frame {
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+        }
+        #exit-button {
+            background-color: #dc3545;
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #copy-button { 
+            background-color: #007bff;
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
         }
     </style>
 </head>
-<body class="font-body antialiased">
+<body>
 
-    <canvas id="feather-canvas"></canvas>
+    <button id="floating-fab" onclick="togglePreview(true)">🔍 معاينة الكود</button>
 
-    <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
-        <div class="max-w-6xl mx-auto glass-card px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <span class="text-2xl">🐣</span> 
-                <span class="font-title text-xl tracking-wide">CIK<span class="text-gold">COIN</span></span>
-            </div>
-            
-            <a href="#" class="hidden md:block bg-gold text-black font-title px-6 py-2 rounded-full hover:bg-white transition-all shadow-lg">
-                BUY $CIK
-            </a>
-            
-            <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden text-gold text-2xl">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-
-        <div id="mobile-menu" class="hidden mt-2 glass-card p-6 flex flex-col gap-4 text-center z-50">
-            <a href="#stats" class="font-bold hover:text-gold">Stats</a>
-            <a href="https://t.me/cik3000" class="text-gold font-bold">Join Telegram</a>
-        </div>
-    </nav>
-
-    <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-24 pb-10 relative">
+    <div id="editor-controls-wrapper">
         
-        <div class="mb-4 px-4 py-1 bg-red-600 rounded-full text-white text-xs font-bold animate-pulse-fast border-2 border-red-400">
-            🔥 HOT: NEXT 1000x GEM
+        <div class="surah-name-control">
+            <label for="new-surah-name">تغيير النص السريع:</label>
+            <input type="text" id="new-surah-name" placeholder="اكتب النص البديل هنا (مثل اسم السورة)">
+            <button onclick="changeCustomText()">تغيير</button>
         </div>
-
-        <div class="relative w-full max-w-sm mb-4 z-10 flex flex-col items-center">
-            <div class="absolute inset-0 bg-gold/30 blur-[60px] rounded-full animate-pulse pointer-events-none"></div>
-            
-            <img id="main-logo" src="logo.jpg" 
-                 alt="CIK Golden Chick" 
-                 class="relative w-64 h-64 object-contain drop-shadow-[0_0_50px_rgba(255,200,0,0.5)] animate-float"
-                 style="border-radius: 30px;"
-                 onerror="this.src='https://placehold.co/400x400/000000/FFC800?text=Upload+Image'">
-            
-            <label for="image-upload" class="upload-btn hover:bg-gold hover:text-black transition-colors z-20">
-                <i class="fas fa-camera"></i> تغيير الصورة
-            </label>
-            <input type="file" id="image-upload" accept="image/*" hidden onchange="updateImage(this)">
-        </div>
-
-        <h1 class="text-4xl md:text-7xl font-title text-white mb-2 drop-shadow-xl z-10 leading-tight">
-            THE GOLDEN <br><span class="text-gold">OPPORTUNITY</span>
-        </h1>
         
-        <p class="text-base md:text-xl text-gray-300 max-w-lg mx-auto mb-8 font-bold z-10">
-            Don't just watch. <span class="text-gold">OWN IT.</span><br>
-            The most anticipated meme launch is here.
-        </p>
-
-        <div class="flex flex-col gap-3 w-full max-w-sm z-10 mb-8">
-            <a href="#" class="buy-btn w-full py-4 rounded-xl text-black font-title text-xl flex items-center justify-center gap-2">
-                <i class="fas fa-rocket"></i> BUY $CIK NOW
-            </a>
-            <a href="https://t.me/cik3000" class="w-full py-4 glass-card hover:bg-white/10 text-white font-title text-xl flex items-center justify-center gap-2">
-                <i class="fab fa-telegram"></i> JOIN GANG
-            </a>
+        <div class="image-upload-panel">
+            <h4>🖼️ تحويل صورة Base64</h4>
+            <input type="file" id="image-input" accept="image/*" onchange="handleImageUpload()">
+            <textarea id="base64-output" placeholder="سيظهر رابط Base64 هنا."></textarea>
         </div>
 
-        <div id="stats" class="grid grid-cols-3 gap-2 w-full max-w-md z-10">
-            <div class="glass-card p-3 text-center">
-                <div class="text-gold font-title text-xl mb-1">300B</div>
-                <div class="text-[10px] text-gray-400 uppercase font-bold">Supply</div>
-            </div>
-            <div class="glass-card p-3 text-center">
-                <div class="text-orange-500 font-title text-xl mb-1">42%</div>
-                <div class="text-[10px] text-gray-400 uppercase font-bold">Burn</div>
-            </div>
-            <div class="glass-card p-3 text-center">
-                <div class="text-white font-title text-xl mb-1">0%</div>
-                <div class="text-[10px] text-gray-400 uppercase font-bold">Tax</div>
-            </div>
-        </div>
-
-    </section>
-
-    <div class="marquee-container relative z-20 transform -rotate-1 shadow-lg">
-        <div class="inline-block animate-marquee">
-            🚀 DON'T MISS THE MOON • 🥚 HATCHING MILLIONAIRES • 💎 BUY $CIK NOW • 🔥 300 BILLION SUPPLY • 🚀 DON'T MISS THE MOON
-        </div>
+        <textarea id="code-input-box" oninput="runCode()">
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        h1 { color: #28a745; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>[اسم السورة هنا]</h1>
+    <p>هذه الجملة قابلة للتغيير: [اسم السورة هنا]</p>
+    
+    <script>
+        // الكود هنا...
+    </script>
+</body>
+</html>
+        </textarea>
     </div>
 
-    <section class="py-12 px-4 text-center max-w-3xl mx-auto pb-20">
-        <h2 class="font-title text-2xl text-white mb-6">CONTRACT ADDRESS</h2>
+    <div id="full-preview-container">
+        <div style="display: flex; justify-content: space-between; background-color: #333; padding: 5px;">
+            <button id="exit-button" onclick="togglePreview(false)">❌ خروج وعودة للتحرير</button>
+            <button id="copy-button" onclick="copyCode()">📋 نسخ الكود</button>
+        </div>
         
-        <div onclick="copyData('0x182976fac92c6282c4afa9f63b3ff52f8e54570d')" class="glass-card p-4 flex flex-col items-center gap-3 cursor-pointer hover:border-gold group active:scale-95 transition-transform">
-            <div class="w-10 h-10 bg-gold text-black rounded-full flex items-center justify-center text-lg font-bold">CA</div>
-            <div class="font-mono text-gold text-sm md:text-xl break-all">0x182976fac92c6282c4afa9f63b3ff52f8e54570d</div>
-            <div class="text-green-400 text-xs font-bold uppercase">Tap to Copy</div>
-        </div>
-
-        <div class="mt-8 flex justify-center gap-6 text-2xl">
-            <a href="https://x.com/cik_coin" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
-            <a href="mailto:Info.cik@cikcoin.art" class="text-gray-400 hover:text-white transition-colors"><i class="fas fa-envelope"></i></a>
-        </div>
-        <p class="text-gray-600 mt-6 text-sm">© 2025 CIK COIN.</p>
-    </section>
-
-    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-white text-black px-6 py-3 rounded-full font-bold shadow-lg z-[60] flex items-center gap-2 opacity-0 pointer-events-none transition-opacity">
-        <i class="fas fa-check-circle text-green-500"></i> Copied!
+        <iframe id="live-preview-frame"></iframe>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
-        // 1. وظيفة رفع الصورة المباشرة (Local Storage)
-        function updateImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    // تغيير مصدر الصورة فوراً
-                    document.getElementById('main-logo').src = e.target.result;
-                    // حفظ الصورة في المتصفح
-                    localStorage.setItem('cik_logo', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
+        // *** 1. دالة تغيير النص المخصص ***
+        const PLACEHOLDER = /\[اسم السورة هنا\]/g; // البحث عن النص المطلوب تغييره عالمياً
+        
+        function changeCustomText() {
+            const editor = document.getElementById('code-input-box');
+            const newText = document.getElementById('new-surah-name').value;
+            let currentCode = editor.value;
+            
+            // استبدال كل تكرارات النص القديم بالنص الجديد
+            const newCode = currentCode.replace(PLACEHOLDER, newText);
+            
+            // تحديث مربع الكود وبدء المعاينة
+            editor.value = newCode;
+            runCode();
+        }
+
+        // *** 2. دالة المعاينة الرئيسية (بدون تغيير) ***
+        function runCode() {
+            const code = document.getElementById('code-input-box').value;
+            document.getElementById('live-preview-frame').srcdoc = code;
+        }
+
+        // *** 3. دالة التبديل بين المحرر والمعاينة ***
+        function togglePreview(showPreview) {
+            const editorWrapper = document.getElementById('editor-controls-wrapper');
+            const previewContainer = document.getElementById('full-preview-container');
+            const fab = document.getElementById('floating-fab');
+
+            if (showPreview) {
+                editorWrapper.style.display = 'none';
+                fab.style.display = 'none';
+                previewContainer.style.display = 'flex';
+                runCode(); 
+            } else {
+                editorWrapper.style.display = 'flex';
+                fab.style.display = 'block';
+                previewContainer.style.display = 'none';
             }
         }
 
-        // استرجاع الصورة المحفوظة عند فتح الموقع
-        window.onload = function() {
-            const savedLogo = localStorage.getItem('cik_logo');
-            if (savedLogo) {
-                document.getElementById('main-logo').src = savedLogo;
-            }
-        }
+        // *** 4. دالة تحويل الصورة (Base64) ***
+        function handleImageUpload() {
+            const file = document.getElementById('image-input').files[0];
+            const outputArea = document.getElementById('base64-output');
 
-        // 2. وظيفة النسخ
-        function copyData(text) {
-            navigator.clipboard.writeText(text);
-            const toast = document.getElementById('toast');
-            toast.style.opacity = '1';
-            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
-        }
+            if (!file) { outputArea.value = 'الرجاء اختيار صورة.'; return; }
 
-        // 3. نظام الريش (Feathers)
-        const initFeathers = () => {
-            const canvas = document.getElementById('feather-canvas');
-            const scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x0f0518, 0.002);
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-
-            const createFeatherTexture = () => {
-                const c = document.createElement('canvas'); c.width = 32; c.height = 64;
-                const ctx = c.getContext('2d');
-                ctx.fillStyle = '#FFC800'; ctx.beginPath(); ctx.ellipse(16, 32, 8, 25, 0, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.beginPath(); ctx.ellipse(16, 32, 4, 20, 0, 0, Math.PI*2); ctx.fill();
-                return new THREE.CanvasTexture(c);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                outputArea.value = e.target.result;
+                outputArea.select(); 
+                navigator.clipboard.writeText(e.target.result)
+                    .then(() => alert('✅ تم تحويل الصورة ونسخ رابط Base64 تلقائياً! الآن الصقه في خاصية src لـ <img>.'))
+                    .catch(err => alert('تم التحويل، يجب نسخ رابط Base64 يدوياً.'));
             };
+            reader.readAsDataURL(file); 
+        }
 
-            const geometry = new THREE.PlaneGeometry(0.05, 0.15); // ريش صغير جداً
-            const material = new THREE.MeshBasicMaterial({ map: createFeatherTexture(), transparent: true, opacity: 0.6, side: THREE.DoubleSide, depthWrite: false });
-
-            const feathers = [];
-            for(let i=0; i<300; i++) {
-                const f = new THREE.Mesh(geometry, material);
-                f.position.set((Math.random()-0.5)*20, (Math.random()-0.5)*20, (Math.random()-0.5)*10);
-                f.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-                f.userData = { speed: 0.002 + Math.random()*0.005 };
-                scene.add(f); feathers.push(f);
-            }
-            camera.position.z = 5;
-
-            const animate = () => {
-                requestAnimationFrame(animate);
-                feathers.forEach(f => {
-                    f.position.y -= f.userData.speed;
-                    f.rotation.x += 0.01;
-                    if(f.position.y < -10) f.position.y = 10;
-                });
-                renderer.render(scene, camera);
-            };
-            animate();
-            window.onresize = () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
-        };
-        initFeathers();
+        // *** 5. دالة نسخ الكود ***
+        function copyCode() {
+            const code = document.getElementById('code-input-box').value;
+            navigator.clipboard.writeText(code)
+                .then(() => alert('✅ تم نسخ الكود كاملاً بنجاح!'))
+                .catch(err => alert('❌ فشل في النسخ.'));
+        }
+        
+        // تشغيل الكود الافتراضي عند التحميل
+        runCode();
     </script>
 </body>
 </html>
